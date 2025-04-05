@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Starting Electronics</title>
+        <link rel="stylesheet" href="/css/simple.css" media="screen" />
+    </head>
+    <body>
+        <h1><a href="/tech_blog/2025/starting_electronics.html" style="text-decoration:none">Staring Electronics</a></h1>
+        <p>
+            As a kid I loved the idea of making things. I joined woodshop in 2012, the starting year of middle school,
+            and until I left that school in 2014 I kept making things. I eventually branched off during this time into
+            programming, which persists to this day, but something has always been on the back of my mind: I want to
+            make a quadcopter.
+        </p>
+        <p>
+            Now, I have no formal education in electronics. I am a computer science major, and have only ever touched
+            code. My uncle has tried to get me to work with him on projects, but I was too burned out to ever get
+            properly involved; my brain has been wanting to start something though.
+        </p>
+        <p>
+            This feeling has finally broke. My 2024 tax return came in, and; for whatever reason; I decided to start.
+            I spent $500 in tools and materials, and as it was in transit I realised I need to make a space for it.
+            My little office has no more wall space, and there are no rooms for me to take over. Looking around my
+            office, the only unused space is near my desk; but there is a radiator there. It would be a perfect spot
+            for the workspace, and for this reason I took my knowledge from 2013 and went to work.
+        </p>
+        <p>
+            I haven't done any carpentry in years, only barely touching tools and Ikea furniture; but like riding a
+            bike the skills flooded back. I made this little leaning table, and it fit my things perfectly!
+            <img alt="table top glued together" src="/static/2025/starting_electronics/table1.jpg">
+            <img alt="table with legs being put together" src="/static/2025/starting_electronics/table2.jpg">
+            <img alt="table crossbar being put in" src="/static/2025/starting_electronics/table3.jpg">
+            <img alt="table made and leaning agains the wall" src="/static/2025/starting_electronics/table4.jpg">
+            <img alt="table in its place with tools on top of it" src="/static/2025/starting_electronics/table5.jpg">
+        </p>
+        <p>
+            Now that I have my workbench, I need something to make. Although I am in progress of designing the
+            quadcopter circuit, I'm not too confident in my abilities yet. Because of this I started with a smaller
+            project: a simple fan circuit with an LED indicator light.
+        </p>
+        <p>
+            This tiny project helped me learn a tonne. I started with the schematics: I have never touched a CAD
+            software before, and KiCAD was my first. Learning the tool was quick enough, and after figuring out how
+            to draw my schematic, I had my first circuit.
+            <img alt="fan circuit" src="/static/2025/starting_electronics/schematic.png">
+        </p>
+        <p>
+            I learned all about the passive components through this. Although it has no IC, figuring out how to hook
+            in wall power via USB-C was exciting. From this I managed to be confident in knowing how ICs wire up, and
+            feel like I can actually put them together without breaking the components.
+        </p>
+        <p>
+            Next was PCB design, and it was simpler than expected. I read anecdotes before from Reddit and Hackernews
+            users about putting the mounting holes first, and I listened sagely. I knew what components I had ordered
+            and learned all about the standard sizing from this, with both surface mounted and throughhole components
+            sprinkled on. I ended up with this little 3.0x3.5cm board, and I am impressed with my ability to make it
+            this compact right away.
+            <img alt="pcb design" src="/static/2025/starting_electronics/pcb.png">
+        </p>
+        <p>
+            I ordered the board from PCBway, messed up giving them my files, and waited tenatiously for the board to
+            arrive. And was it ever like Christmas when it did. I was so excited to get started. I showed my girlfriend
+            the board, she put it in her mouth, spit it out when I told her it could be toxic; all of the good things.
+            And then I got to work.
+            <img alt="pcb boards without components" src="/static/2025/starting_electronics/board.png">
+        </p>
+        <p>
+            My first board got burned from me using too low of a temperature with the solder paste: I didn't realise that
+            lead-free solder would have such a higher melting temperature; I didn't learn this until after I mounted the
+            LED on the second board. Once I did, seeing the resistors and diodes just find themselves to their pads was
+            enthralling. I was worried that I'd fuck it up somehow and waste a lot of parts, and although I did because
+            I kept dropping the tiny SMD components, I ended up with something working.
+            <img alt="pcb with mounted components" src="/static/2025/starting_electronics/working.jpg">
+        </p>
+        <p>
+            This was a fun first step into the world of electronics. It was a very simple start to it, and I think that
+            it was worth it: I have learned so much from this fan controller that I was worried would take ages to get
+            a grasp on. But my first PCB has been made, and hopefully many more will follow. As I journey towards my
+            quadcopter, I hope this documentation shows that getting into electronics isn't that hard, and I am looking
+            forward to documenting the process.
+        </p>
+        <footer>
+            Written April 5th, 2025.
+            <nav>
+                <a href="/">home</a>
+                <a href="https://github.com/TheCandianVendingMachine">github</a>
+                <a href="/personal_blog/index.html">personal blog</a>
+                <a href="/tech_blog/index.html">tech blog</a>
+            </nav>
+        </footer>
+    </body>
+</html>
