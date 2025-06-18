@@ -360,6 +360,8 @@ textarea {
 /* Light mode default, dark mode if recognized as preferred */
 :root {
     --background-main: #ffa8e2;
+    --background-main2: #fface5;
+    --background-main3: #ede553;
     --background-element: #ffd6f2;
     --background-inverted: #00571d;
     --text-main: #1f1f1f;
@@ -521,6 +523,7 @@ figure {
 body {
     background: #fefefe;
     background: var(--background-main);
+    background: linear-gradient(180deg, var(--background-main) 0%, var(--background-main2) 60%, var(--background-main3) 100%);
     color: #1f1f1f;
     color: var(--text-main);
 }
