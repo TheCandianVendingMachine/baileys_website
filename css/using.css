@@ -360,8 +360,8 @@ textarea {
 /* Light mode default, dark mode if recognized as preferred */
 :root {
     --background-main: #ffa8e2;
-    --background-element: #eee;
-    --background-inverted: #282a36;
+    --background-element: #ffabe3;
+    --background-inverted: #00571d;
     --text-main: #1f1f1f;
     --text-alt: #333;
     --text-inverted: #fefefe;
@@ -393,7 +393,7 @@ h3,
 h4,
 h5,
 h6 {
-    filter: drop-shadow(0.23rem 0 0.75rem #ff38bd);
+    filter: drop-shadow(0 0.66rem 0.75rem #ff38bd);
     margin: 3.2rem 0 0.8em;
 }
 
@@ -578,7 +578,7 @@ mark {
 
 kbd, /* different style for kbd? */
 code {
-    background: #eee;
+    background: var(--background-element);
     padding: 0.1em 0.25em;
     border-radius: 0.2rem;
     -webkit-box-decoration-break: clone;
