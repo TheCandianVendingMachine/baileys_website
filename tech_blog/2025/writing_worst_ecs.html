@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Writing the World's Worst ECS</title>
+        <link rel="stylesheet" href="/css/sakura.css" media="screen" />
+    </head>
+    <body>
+        <h1><a href="/tech_blog/2025/writing_worst_ecs.html" style="text-decoration:none">Writing the World's Worst ECS</a></h1>
+        <p>
+            I'm writing a game engine in Rust.
+        </p>
+        <i>*gasp*</i>
+        <p>
+            I know! Never been done before.
+        </p>
+        <h2>Overview of the systems</h2>
+        <p>
+            But I'm writing a game engine in Rust, just because I thought it would be fun
+            and I am tired of C++. This hasn't been new; I've stopped writing C++ just due
+            to a general tiredness from the language. I kept running into language-specific
+            quirks, and the difficulty adding a library to a C++ project made me want to
+            invent more here. With Rust, I can add libraries easily and with Cargo I don't
+            have to futz with makefiles.
+        </p>
+        <p>
+            But that's neither here nor there, because instead of using mature ecosystem
+            components, like anything <a href="https://crates.io/crates/bevy">Bevy related,</a>
+            I have decided to write raw OpenGL with an SDL2 window. No
+            <a href="https://docs.rs/winit/latest/winit/">Winit</a> here!
+        </p>
+        <p>
+            But why? Well, because I think they suck. They are too opinionated and
+            restrict what <i><b>I</b></i> want to do. Bevy forces you into their way of
+            subscribing systems and whatnot with their ECS, and Winit's default path is
+            having you register a callback to refresh the window. Yuck!
+        </p>
+        <p>
+            So instead, I've decided to go manual. And a part of this manual gearbox is a
+            custom ECS. Now, I've never done a "proper" ECS. My component systems were
+            usually just pointers allocated on the heap owned by the entity. It worked, I
+            made some games with it, but Rust forces me into an ECS due to how it handles
+            ownership. It's just the path of least resistance.
+        </p>
+        <p>
+            Now how does my ECS work? Terribly!
+        </p>
+        <p>
+            Roughly; all entities are stored in pairs: their handle, and a bitset
+            representing the components they own. Nothing atypical yet.
+        </p>
+        <p>
+            Components are registered with a trait that forces you to define their tag.
+            This is just any object which can be turned into a <code>u32</code>. Likewise,
+            they have to define a function with returns their local-ID. This ID can be
+            anything, but I use it to determine their index within the container that
+            stores them. Combined, these two elements compose the entity's unique ID: the
+            lower 32 bits are the local-ID and the upper 32 bits is the tag. Simple!
+        </p>
+        <p>
+            Something I <i>did</i> steal from Bevy is their query system. Mine is not as
+            fancy, but it works well to define when I want to capture components. This is
+            a struct created by a builder pattern which lets you define which components
+            to query. How do we store which component to query? Well, with their tag of
+            course!
+        </p>
+        <p>
+            Now, this all works fairly well together. It lets us pretty easily define
+            components, entities, and even a vague way to query for components and
+            entities. So why is my ECS the worst in the world?
+        </p>
+        <h2>The reason my ECS is the worst in the world</h2>
+        <p>
+            I want my data to be pure, and I want my data to be contiguous. Also: I want
+            my data to be parallelisable. Does the game I'm writing need to be? Of course
+            not! But future games may. So I must over-engineer now!
+        </p>
+        <p>
+            A system works by defining the components it will operate on with a query.
+            This works as a contract, so the system can guarantee the entities it gathers
+            will only have those components which it asks for. Still simple.
+        </p>
+        <p>
+            But even though we know the component we are working on will be only mutable
+            by one source, Rust will be pissed we have many references around. I could use
+            a <code>RefCell</code>, but I also want my data to be operated on locally so I
+            can benefit from cache hits. So I reached into my <code>unsafe</code> toolbox
+            and wrote a container which stores any-sized components contigiously into
+            memory. That's right! I wrote a one-time-write bump allocator.
+        </p>
+        <p>
+            Whenever a system ticks, we will go through every component store, and get
+            the components which are going to be relevant for the system. This is returned
+            with an <code>entity:component</code> pairing. Once we get every component, we
+            then, for every entity, allocate one of these bump allocators and store the
+            entity's components into it. We group all of the allocators together, ship it
+            off to the system, and then we are happy.
+        </p>
+        <p>
+            What's that? You want state that changes across frames? Why aren't you picky.
+        </p>
+        <p>
+            Okay so after we tick a system, we then <i>have</i> to go back to each
+            component store and update each component's original source. Now, I justified
+            this to myself because I convinced myself I could eventually write a
+            graph-based executor which would let systems run in parallel, mutating data
+            that would never have a chance to touch each other. Do I have this right now?
+            No. Do I need this? ... no. Why go this complex?
+        </p>
+        <p>
+            :)
+        </p>
+        <h2>Does this suck?</h2>
+        <p>
+            Well it certainly fucking sucks to write.
+        </p>
+        <pre>
+<code class="language-rust">let query = controller::PlayerControllerSystem::query();
+let relevant_entities = entities.entities_with_components(querG);
+
+let mut transforms = transforms.components_matching_entities(&relevant_entities);
+let mut colliders = colliders.components_matching_entities(&relevant_entities);
+let mut particles = particles.components_matching_entities(&relevant_entities);
+let mut player_controllers = player_controllers.components_matching_entities(&relevant_entities);
+let mut cameras = cameras.components_matching_entities(&relevant_entities);
+
+transforms.sort_unstable_by(|l, r| l.0.cmp(&r.0));
+colliders.sort_unstable_by(|l, r| l.0.cmp(&r.0));
+particles.sort_unstable_by(|l, r| l.0.cmp(&r.0));
+player_controllers.sort_unstable_by(|l, r| l.0.cmp(&r.0));
+cameras.sort_unstable_by(|l, r| l.0.cmp(&r.0));
+
+let mut groups = Vec::new();
+for (idx, entity) in relevant_entities.into_iter().enumerate() {
+    let mut component_group = component::Group::<64>::new(entity);
+    if !transforms.is_empty() {
+        component_group.assign(transforms[idx].1, Mutability::Constant);
+    }
+    if !colliders.is_empty() {
+        component_group.assign(colliders[idx].1, Mutability::Constant);
+    }
+    if !particles.is_empty() {
+        component_group.assign(particles[idx].1, Mutability::Constant);
+    }
+    if !player_controllers.is_empty() {
+        component_group.assign(player_controllers[idx].1, Mutability::Constant);
+    }
+    if !cameras.is_empty() {
+        component_group.assign(cameras[idx].1, Mutability::Constant);
+    }
+    groups.push(component_group)
+}
+controller_system.tick(&grid, dt, &mut groups);
+</code>
+        </pre>
+        <p>
+            And this is <i><b>ONE</b></i> system tick!
+        </p>
+        <p>
+            ... maybe I should have kept it simple. stupid.
+        </p>
+        <h2>Does it work</h2>
+        <p>
+            I have no idea! At all. It may work it may not. I bet it will be very slow,
+            but I think it could potentially be performant. I just need to use it a bit,
+            see if I can abstract this hellscape whatsoever, and then I will be back.
+        </p>
+        <p>
+            That's right! I wrote this without being done first. Oh well, it's another
+            article for another time
+        </p>
+        <footer>
+            Written Jun 18th, 2025.
+            <nav>
+                <a href="/">home</a>
+                <a href="https://github.com/TheCandianVendingMachine">github</a>
+                <a href="/personal_blog/index.html">personal blog</a>
+                <a href="/tech_blog/index.html">tech blog</a>
+            </nav>
+        </footer>
+    </body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/rust.min.js" defer></script>
+    <script src="/static/js/highlight_on_load.js" defer></script>
+</html>
