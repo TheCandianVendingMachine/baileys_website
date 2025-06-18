@@ -359,7 +359,7 @@ textarea {
 
 /* Light mode default, dark mode if recognized as preferred */
 :root {
-	--background-main: #fefefe;
+	--background-main: #ffa8e2;
 	--background-element: #eee;
 	--background-inverted: #282a36;
 	--text-main: #1f1f1f;
@@ -367,8 +367,8 @@ textarea {
 	--text-inverted: #fefefe;
 	--border-element: #282a36;
 	--theme: #7a283a;
-	--theme-light: hsl(320, 100%, 82%);
-	--theme-dark: hsl(320, 100%, 82%);
+	--theme-light: hsl(0, 25%, 65%);
+	--theme-dark: hsl(0, 25%, 45%);
 }
 
 /* @media (prefers-color-scheme: dark) {
