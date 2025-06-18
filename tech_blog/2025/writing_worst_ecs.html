@@ -117,7 +117,7 @@
         </p>
         <pre>
 <code class="language-rust">let query = controller::PlayerControllerSystem::query();
-let relevant_entities = entities.entities_with_components(querG);
+let relevant_entities = entities.entities_with_components(query);
 
 let mut transforms = transforms.components_matching_entities(&relevant_entities);
 let mut colliders = colliders.components_matching_entities(&relevant_entities);
