@@ -643,3 +643,13 @@ body > a:first-child {
 body > a:first-child:focus {
     top: 1rem;
 }
+
+footer {
+    font-size: 80%;
+    line-height: 1.2;
+    -webkit-text-size-adjust: 80%;
+}
+
+.hotlink {
+    border: thick double pink;
+}
