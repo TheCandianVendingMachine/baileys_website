@@ -524,7 +524,7 @@ body {
     background: #fefefe;
     background: var(--background-main);
     background: linear-gradient(180deg, var(--background-main) 0%, var(--background-main2) 60%, var(--background-main3) 100%);
-    background-attachment: fixed;
+    min-height: 100vh;
     color: #1f1f1f;
     color: var(--text-main);
 }
