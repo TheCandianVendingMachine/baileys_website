@@ -38,7 +38,7 @@
 */
 html {
 	font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; /* 1 */
-	font-size: 125%; /* 2 */
+	font-size: 100%; /* 2 */
 	line-height: 1.6; /* 3 */
 	-webkit-text-size-adjust: 100%; /* 4 */
 	word-break: break-word; /* 5 */
@@ -367,8 +367,8 @@ textarea {
 	--text-inverted: #fefefe;
 	--border-element: #282a36;
 	--theme: #7a283a;
-	--theme-light: hsl(0, 25%, 65%);
-	--theme-dark: hsl(0, 25%, 45%);
+	--theme-light: hsl(320, 100%, 82%);
+	--theme-dark: hsl(320, 100%, 82%);
 }
 
 /* @media (prefers-color-scheme: dark) {
