@@ -360,7 +360,7 @@ textarea {
 /* Light mode default, dark mode if recognized as preferred */
 :root {
     --background-main: #ffa8e2;
-    --background-element: #ffabe3;
+    --background-element: #ffd6f2;
     --background-inverted: #00571d;
     --text-main: #1f1f1f;
     --text-alt: #333;
