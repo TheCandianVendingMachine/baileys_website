@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Theoretical Pipeline</title>
+        <link rel="stylesheet" href="/css/using.css" media="screen" />
+    </head>
+    <body>
+        <h1><a href="/tech_blog/2025/theoretical_pipeline.html" style="text-decoration:none">Theoretical Pipeline</a></h1>
+        <p>👏 I 👏 Love 👏 Deployment 👏 Pipelines 👏</p>
+        <p>I really do!</p>
+        <p>I have a theoretical one I am quite happy with. It isn't in service, but I could implement it and it would not bring me any value. <i>yet.</i></p>
+        <p>
+            I am writing a new game engine. This is just to let me learn Vulkan before I hack apart my Rust game engine. This one is written in C++, and
+            after struggling with CMake for FAR too long (3 days...) I'm finally actually coding.
+        </p>
+        <p>
+            Deployment pipelines for regular software are interesting in and of themself. Needing to orchestrate containers in a microservice architecture, or
+            deploying a monolith to many servers; that's a hard problem! How do you make sure your product doesn't go down, how do you let any engineer deploy.
+            I've worked on these systems and they are interested with complex edgecases. But for a game which you deploy an executible for, it's a interesting in
+            a different way.
+        </p>
+        <p>
+            Games aren't like other software. Sure, you have your Excel and Word, but with games you have to package <i>content.</i> This is hard. You can't just
+            ship PNGs and WAV files, that would be too slow for load times. You can't store 3d model information, because you'll have to transform it to a format
+            the GPU likes at runtime. So you have to pre-process it.
+        </p>
+        <p>
+            This means your deployment pipeline forks. You have both code and assets, but both have to be linked and bundled together. If you have a build that passes
+            tests, you should also have an asset bundle which can be linked to it; preferably the newest ones. But some branches may use assets which have been renamed
+            or changed in some way. Linking assets to builds is necessary.
+        </p>
+        <p>
+            My theoretical pipeline did this. Upon pushing changes to a local build server, it would first split assets from code. Some assets <i>are</i> code, such as shaders,
+            but in general you would rip your assets away and test the code independently. The code pipeline isn't anything novel, so I won't discuss it here. The assets get split,
+            and immediately preprocessing begins. First would be a hash to check for the changes needed; git is no help here due to binary files. After hashing, if a UUID doesn't
+            exist for the asset one would be generated. This is pushed to a database, and then the assets start getting bundled. 3d models would have their vertices shoved together,
+            materials would be linked, and textures would be compressed. This is all done so that when we load the assets we don't have to do this at runtime.
+        </p>
+        <p>
+            Once code is built, the required assets are grabbed from the asset storage server and it's all packaged into a neat little zip file. The tested code is pushed to GitHub/GitLab,
+            and a build is provided to anyone who can download it.
+        </p>
+        <p>
+            From here we could do stuff like autoamtic Steam releases and whatnot, but that is beyond what I know; I've never released a game commerically. But I think this pipeline would work.
+            I hope to implement it one day, and if I do I'm sure I'll write about it.
+        </p>
+        <footer>
+            Written September 11th, 2025.
+            <nav>
+                <a href="/">home</a>
+                <a href="https://github.com/TheCandianVendingMachine">github</a>
+                <a href="/personal_blog/index.html">personal blog</a>
+                <a href="/tech_blog/index.html">tech blog</a>
+            </nav>
+        </footer>
+    </body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/rust.min.js" defer></script>
+    <script src="/static/js/highlight_on_load.js" defer></script>
+</html>
