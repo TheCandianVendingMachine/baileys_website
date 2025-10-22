@@ -12,6 +12,71 @@
             full well knew that I could at least have a competitive shot at the interview
             should I have made it. But alas, those damming words entered my email.
         </p>
+        <h2>What is Tailscale?</h2>
+        <p>
+            Tailscale is a company that produces a VPN. This VPN allows a connection
+            between two clients, peer-to-peer, without needing any changes to existing
+            network architectures. This lets it be fairly plug-and-play so that customers
+            don't need to fiddle with ports or IPs. Likewise, they provide an
+            identity-based access-control-list so you don't need to assign static IPs and
+            ports and whatnot.
+        </p>
+        <p>
+            The main benefit of Tailscale is that it is encrypted end-to-end, and that
+            your connection will always go through. They achieve the latter via the ICE
+            protocol. If you can't connect via IPv6, IPv4, or the NAT traversals, they
+            fallback to HTTPS relay servers that stream your requests through Tailscale
+            operated servers.
+        </p>
+        <h2>The rules of the game</h2>
+        <p>
+            Now, as this is the first entry in this series, I should disclose ground
+            rules.
+        </p>
+        <h4>Rule 1) I am not implementing the entire company</h4>
+        <p>
+            I am a jobless part-time student with $2000 in her bank account at the time of
+            writing (CAD too, so like $50 USD). I cannot afford to seed my own competitor
+            startup, and I don't really want to. I am going to be finding a reasonable
+            subset of features which encompass the core of their product, and implement
+            that.
+        </p>
+        <h4>Rule 2) I am not building things at scale</h4>
+        <p>
+            Similar to the first rule, I am not building things at scale because I am a
+            jobless student with $2000 in her bank account. I cannot afford to spin up AWS
+            instances and test things out. I am going to deploy things to my homelab to
+            show proof-of-concept features, but overall this isn't going to be anything
+            scalable. Quite frankly, I don't <i>know</i> how to write things at scale;
+            I've done it only a tiny bit at my co-op work term. This is just a byproduct
+            of me not being getting the chance to learn it at any firm.
+        </p>
+        <h4>Rule 3) No referring to source code or comparable products</h4>
+        <p>
+            This is a big one. I am not going to use LLMs, look at existing
+            implementations, or anything similar. Everything I document will be as much
+            written-by-me (Bailey Danyluk) is possible. I want to learn from this too,
+            because what's the point of proving that I know how to do this without knowing
+            what I'm doing. So I will keep third-party libraries to a minimum, and try to
+            show off as much as possible.
+        </p>
+        <h2>The subset I'm implementing</h2>
+        <p>
+            Lets look <a href="https://tailscale.com/wireguard-vpn">Wireguard</a> and see
+            what features are relevant:
+        </p>
+        <ol type="1">
+            <li>Peer-to-peer connections</li>
+            <li>End-to-end encrypted</li>
+            <li>Identity based ACL</li>
+        </ol>
+        <p>
+            Likewise, there are a few implementation details I want to explore as well:
+        </p>
+        <ol type="1" start="4">
+            <li>Some form of NAT Traversal</li>
+            <li>Relay server fallback</li>
+        </ol>
         <footer>
             Written October 21st, 2025.
             <nav>
